@@ -1,4 +1,6 @@
 const express = require('express');
+const { faker } = require('@faker-js/faker'); //npm i @faker-js/faker <- Simulamos data
+
 const app = express();
 const port = 8080;
 
@@ -11,26 +13,25 @@ app.get('/nueva-ruta', (req, res) => {
 });
 
 app.get('/products', (req, res) => {
-  res.json([
-    {
-      route: 'Ruta productos',
-      name: 'My Product',
-      price: 100000,
-      category: 'My Category'
-    },
-    {
-      route: 'Ruta productos',
-      name: 'My Product',
-      price: 100000,
-      category: 'My Category'
-    },
-    {
-      route: 'Ruta productos',
-      name: 'My Product',
-      price: 100000,
-      category: 'My Category'
-    }
-  ]); // res.json para crear una API
+  const products = [];
+
+  const { size } = req.query;
+  const limit = size || 10;
+
+  for (let i = 0; i < limit; i++) {
+    products.push({
+      name: faker.commerce.productName(),
+      price: parseInt(faker.commerce.price(), 10),
+      name: faker.commerce.productName(),
+      image: faker.image.url()
+    })
+  }
+  res.json(products); // res.json para crear una API
+});
+
+// Los endpoints específicos deben ir antes que los endpoints dinámicos
+app.get('/products/filter', (req, res) => {
+  res.json('Soy un filtro'); // Si no, me tomaría '/filter' como el parámetro
 });
 
 app.get('/products/:id', (req, res) => {
@@ -43,6 +44,7 @@ app.get('/products/:id', (req, res) => {
     category: 'My Category'
   });
 });
+
 
 app.get('/categories/:ctgId/products/:prdId', (req, res) => {
   const {ctgId, prdId} = req.params;
