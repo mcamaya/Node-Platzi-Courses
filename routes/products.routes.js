@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     products.push({
       name: faker.commerce.productName(),
       price: parseInt(faker.commerce.price(), 10),
-      category: faker.commerce.category(),
+      description: faker.commerce.productDescription(),
       image: faker.image.url()
     })
   }
@@ -35,6 +35,14 @@ router.get('/:id', (req, res) => {
     category: 'My Category'
   });
 });
+
+router.post('/', (req, res) => {
+  const data = req.body;
+  res.json({
+    msg: 'Creación de un producto',
+    data
+  })
+})
 
 
 module.exports = router;
