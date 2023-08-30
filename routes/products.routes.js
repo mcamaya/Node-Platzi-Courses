@@ -27,13 +27,19 @@ router.get('/filter', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const {id} = req.params;
-  res.json({
-    id,
-    route: 'Ruta productos',
-    name: 'My Product',
-    price: 100000,
-    category: 'My Category'
-  });
+  if(id === '999'){
+    res.status(404).json({
+      msg: 'Not found'
+    })
+  } else {
+    res.status(200).json({
+      id,
+      route: 'Ruta productos',
+      name: 'My Product',
+      price: 100000,
+      category: 'My Category'
+    });
+  }
 });
 
 router.post('/', (req, res) => {
