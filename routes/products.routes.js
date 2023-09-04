@@ -9,10 +9,14 @@ router.get('/', async (req, res) => {
   res.json(products); // res.json para crear una API
 });
 
-router.get('/:id', async (req, res) => {
-  const {id} = req.params;
-  const product = await service.findOne(id);
-  res.status(200).json(product);
+router.get('/:id', async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const product = await service.findOne(id);
+    res.status(200).json(product);
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post('/', async (req, res) => {
@@ -21,14 +25,14 @@ router.post('/', async (req, res) => {
   res.status(201).json(newProduct);
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const data = req.body;
     const modified = await service.update(id, data);
     res.json(modified);
   } catch (error) {
-    res.status(404).json({msg: error.message})
+    next(error);
   }
 })
 
