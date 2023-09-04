@@ -4,33 +4,37 @@ const ProductsService = require('../services/products.service.js');
 const router = Router();
 const service = new ProductsService();
 
-router.get('/', (req, res) => {
-  const products = service.find();
+router.get('/', async (req, res) => {
+  const products = await service.find();
   res.json(products); // res.json para crear una API
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const {id} = req.params;
-  const product = service.findOne(id);
+  const product = await service.findOne(id);
   res.status(200).json(product);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const data = req.body;
-  const newProduct = service.create(data);
+  const newProduct = await service.create(data);
   res.status(201).json(newProduct);
 })
 
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
-  const modified = service.update(id, data);
-  res.json(modified);
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+    const modified = await service.update(id, data);
+    res.json(modified);
+  } catch (error) {
+    res.status(404).json({msg: error.message})
+  }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const deleted = service.delete(id);
+  const deleted = await service.delete(id);
   res.json(deleted);
 })
 
